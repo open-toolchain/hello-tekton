@@ -70,7 +70,6 @@ do
   sleep 5
 done
 
-echo -e "Retrieving app name using command kubectl get pods --namespace ${CLUSTER_NAMESPACE} -o json | jq -r '[ .items[] | select(.spec.containers[]?.image=="'"${IMAGE_REPOSITORY}:${IMAGE_TAG}"'") | .metadata.labels.app] [1]"
 APP_NAME=$(kubectl get pods --namespace ${CLUSTER_NAMESPACE} -o json | jq -r '[ .items[] | select(.spec.containers[]?.image=="'"${IMAGE_REPOSITORY}:${IMAGE_TAG}"'") | .metadata.labels.app] [1]')
 echo -e "APP: ${APP_NAME}"
 echo "DEPLOYED PODS:"
