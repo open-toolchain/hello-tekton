@@ -60,7 +60,7 @@ spec:
     - name: repository
       value: "https://github.com/alexanto/hello-tekton"
     - name: revision
-      value: "master"
+      value: "tekton-poc"
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: EventListener
