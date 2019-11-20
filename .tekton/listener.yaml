@@ -58,7 +58,7 @@ metadata:
 spec:
   params:
     - name: repository
-      value: "https://github.com/open-toolchain/hello-tekton"
+      value: "https://github.com/alexanto/hello-tekton"
     - name: revision
       value: "master"
 ---
