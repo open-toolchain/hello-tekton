@@ -1,6 +1,60 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
+  name: discovery-task
+spec:
+  inputs:
+    params:
+      - name: task-pvc
+        description: the output pvc
+      - name: repository
+        description: the git repo
+      - name: revision
+        description: the revision
+  steps:
+    - name: clone-repo
+      image: alpine/git
+      env:
+        - name: REPOSITORY
+          value: $(inputs.params.repository)
+        - name: REVISION
+          value: $(inputs.params.revision)
+      command: ["/bin/sh", "-c"]
+      args:
+        - set -e -o pipefail;
+          echo "Cloning $REPOSITORY";
+          git clone -q -b $REVISION $REPOSITORY .;
+
+    - name: discovery
+      image: shri4u/rig:0.2
+      command:
+        - /go/src/github.ibm.com/rig/rig-app
+      args:
+        - "-giturl"
+        -  $(inputs.params.repository)
+        - "-gitbranch"
+        -  $(inputs.params.revision)
+        - "-repodir"
+        -  $(inputs.params.task-pvc)
+        - "-dburl"
+        - "bolt://169.47.180.157:30687"
+        - "-clairapi"
+        - "http://169.47.180.148:30890"
+        - "-pysafetyapi"
+        - "http://169.47.180.157:30892"
+        - "-pedigreeapi"
+        - "http://169.62.50.203:9940"
+      volumeMounts:
+        - mountPath: /workspace/git-input/
+          name: task-volume
+  volumes:
+    - name: task-volume
+      persistentVolumeClaim:
+        claimName: $(inputs.params.task-pvc)
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
   name: build-task
 spec:
   inputs:

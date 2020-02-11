@@ -26,6 +26,14 @@ spec:
       description: The Kubernetes cluster namespace
       default: prod
   tasks:
+    - name: pipeline-gitsecure-task
+      taskRef:
+        name: gitsecure-task
+      params:
+        - name: task-pvc
+          value: $(params.pipeline-pvc)
+        - name: repository
+          value: $(params.repository)
     - name: pipeline-build-task
       taskRef:
         name: build-task
