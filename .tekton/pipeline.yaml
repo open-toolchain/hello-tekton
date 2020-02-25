@@ -4,8 +4,6 @@ metadata:
   name: pipeline
 spec:
   params:
-    - name: pipeline-pvc
-      description: the pipeline pvc name
     - name: repository
       description: the git repo
     - name: revision
@@ -25,8 +23,8 @@ spec:
     - name: clusterNamespace
       description: The Kubernetes cluster namespace
       default: prod
-workspaces:
-- name: pipeline-pvc
+  workspaces:
+  - name: pipeline-pvc
   tasks:
     - name: pipeline-build-task
       taskRef:
