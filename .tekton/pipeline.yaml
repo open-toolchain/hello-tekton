@@ -25,13 +25,13 @@ spec:
     - name: clusterNamespace
       description: The Kubernetes cluster namespace
       default: prod
+workspaces:
+- name: pipeline-pvc
   tasks:
     - name: pipeline-build-task
       taskRef:
         name: build-task
       params:
-        - name: task-pvc
-          value: $(params.pipeline-pvc)
         - name: repository
           value: $(params.repository)
         - name: revision
@@ -41,14 +41,15 @@ spec:
         - name: registryNamespace
           value: $(params.registryNamespace)
         - name: registryRegion
-          value: $(params.registryRegion)          
+          value: $(params.registryRegion)
+      workspaces:
+      - name: task-pvc
+        workspace: pipeline-pvc          
     - name: pipeline-validate-task
       runAfter: [pipeline-build-task]
       taskRef:
         name: validate-task
       params:
-        - name: task-pvc
-          value: $(params.pipeline-pvc)
         - name: repository
           value: $(params.repository)
         - name: revision
@@ -56,14 +57,15 @@ spec:
         - name: apikey
           value: $(params.apikey)
         - name: registryRegion
-          value: $(params.registryRegion)           
+          value: $(params.registryRegion)
+      workspaces:
+      - name: task-pvc
+        workspace: pipeline-pvc            
     - name: pipeline-deploy-task
       runAfter: [pipeline-validate-task]
       taskRef:
         name: deploy-task
       params:
-        - name: task-pvc
-          value: $(params.pipeline-pvc)
         - name: repository
           value: $(params.repository)
         - name: revision
@@ -76,3 +78,6 @@ spec:
           value: $(params.clusterRegion)
         - name: clusterNamespace
           value: $(params.clusterNamespace)
+      workspaces:
+      - name: task-pvc
+        workspace: pipeline-pvc  
