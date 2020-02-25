@@ -22,9 +22,9 @@ spec:
         default: "hello-containers-tekton"
       - name: registryRegion
         description: the ibmcloud registry region
-workspaces:
-- name: task-pvc
-  mountPath: /artifacts   
+  workspaces:
+  - name: task-pvc
+    mountPath: /artifacts   
   steps:
     - name: clone-repo
       image: alpine/git
@@ -108,9 +108,9 @@ spec:
         default: "https://cloud.ibm.com"
       - name: registryRegion
         description: the ibmcloud registry region   
-workspaces:
-- name: task-pvc
-  mountPath: /artifacts         
+  workspaces:
+  - name: task-pvc
+    mountPath: /artifacts         
   steps:
     - name: clone-repo
       image: alpine/git
@@ -168,9 +168,9 @@ spec:
         description: The IBM Cloud Kubernetes cluster name
       - name: clusterRegion
         description: The IBM Cloud Kubernetes cluster region
-workspaces:
-- name: task-pvc
-  mountPath: /artifacts  
+  workspaces:
+  - name: task-pvc
+    mountPath: /artifacts  
   steps:
     - name: clone-repo
       image: alpine/git
