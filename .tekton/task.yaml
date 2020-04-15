@@ -88,7 +88,7 @@ spec:
           export GIT_COMMIT=$(git rev-parse HEAD);
           export REGISTRY_URL=$(ibmcloud cr info | sed "2q;d" | awk '{for(i=1;i<=NF;i++) if ($i=="Registry") print $(i+1)}');
           source build-docker-image.sh;
-          curl -u USERNAME:PASSWORD -X PUT "https://harshitartifactory247.jfrog.io/artifactory/example-repo-local/jFrog/artifacts/ARTIFACTFILE.zip" -T /artifacts/ARTIFACTFILE.zip
+          curl -u USERNAME:PASSWORD -X PUT "https://harshitartifactory247.jfrog.io/artifactory/example-repo-local/jFrog/artifacts/ARTIFACTFILE.zip" -T /artifacts/ARTIFACTFILE.zip;
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
