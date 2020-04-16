@@ -201,6 +201,12 @@ spec:
           value: $(inputs.params.clusterNamespace)
         - name: PIPELINE_KUBERNETES_CLUSTER_NAME
           value: $(inputs.params.cluster)
+        - name: artifactoryUrl
+          description: jfrog artifactory location to store artifacts
+        - name: artifactoryUserName
+          description: artifactory username
+        - name: artifactoryPassword
+          description: artifactory password
       command: ["/bin/bash", "-c"]
       args:
         - set -e -o pipefail;
@@ -236,4 +242,21 @@ spec:
           while read line; do export $line; done < /artifacts/build.properties;
           cp /artifacts/build.properties .;
           source deploy-to-kubernetes.sh;
-      
+    - name: zipping-artifacts
+      image: ibmcom/pipeline-base-image
+      command: ["/bin/sh", "-c"]
+      args:
+        - zip -r artifact /artifacts/ -x ".*";
+          echo "Done Zipping";
+    - name: saving-artifacts
+      image: ibmcom/pipeline-base-image
+      env:
+        - name: ARTIFACTORY_URL
+          value: $(inputs.params.artifactoryUrl)
+        - name: ARTIFACTORY_USER
+          value: $(inputs.params.artifactoryUserName)
+        - name: ARTIFACTORY_PASSWORD
+          value: $(inputs.params.artifactoryPassword)
+      command: ["/bin/sh", "-c"]
+      args:
+        - curl -u $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD -X PUT "$ARTIFACTORY_URL/artifact/data.zip" -T artifact.zip;
