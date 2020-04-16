@@ -168,6 +168,12 @@ spec:
         description: The IBM Cloud Kubernetes cluster name
       - name: clusterRegion
         description: The IBM Cloud Kubernetes cluster region
+      - name: artifactoryUrl
+        description: jfrog artifactory location to store artifacts
+      - name: artifactoryUserName
+        description: artifactory username
+      - name: artifactoryPassword
+        description: artifactory password
   workspaces:
   - name: task-pvc
     mountPath: /artifacts  
@@ -201,12 +207,6 @@ spec:
           value: $(inputs.params.clusterNamespace)
         - name: PIPELINE_KUBERNETES_CLUSTER_NAME
           value: $(inputs.params.cluster)
-        - name: artifactoryUrl
-          description: jfrog artifactory location to store artifacts
-        - name: artifactoryUserName
-          description: artifactory username
-        - name: artifactoryPassword
-          description: artifactory password
       command: ["/bin/bash", "-c"]
       args:
         - set -e -o pipefail;
