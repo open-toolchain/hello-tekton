@@ -23,6 +23,12 @@ spec:
     - name: clusterNamespace
       description: The Kubernetes cluster namespace
       default: prod
+    - name: artifactoryUrl
+      description: jfrog artifactory location to store artifacts
+    - name: artifactoryUserName
+      description: artifactory username
+    - name: artifactoryPassword
+      description: artifactory password
   workspaces:
   - name: pipeline-pvc
   tasks:
@@ -76,6 +82,12 @@ spec:
           value: $(params.clusterRegion)
         - name: clusterNamespace
           value: $(params.clusterNamespace)
+        - name: artifactoryUrl
+          value: $(params.artifactoryUrl)
+        - name: artifactoryUserName
+          value: $(params.artifactoryUserName)
+        - name: artifactoryPassword
+          value: $(params.artifactoryPassword)
       workspaces:
       - name: task-pvc
         workspace: pipeline-pvc  

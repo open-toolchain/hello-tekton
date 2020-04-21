@@ -165,6 +165,12 @@ spec:
       description: The IBM Cloud Kubernetes cluster name
     - name: clusterRegion
       description: The IBM Cloud Kubernetes cluster region
+    - name: artifactoryUrl
+      description: jfrog artifactory location to store artifacts
+    - name: artifactoryUserName
+      description: artifactory username
+    - name: artifactoryPassword
+      description: artifactory password
   workspaces:
   - name: task-pvc
     mountPath: /artifacts  
@@ -233,4 +239,22 @@ spec:
           while read line; do export $line; done < /artifacts/build.properties;
           cp /artifacts/build.properties .;
           source deploy-to-kubernetes.sh;
-      
+    - name: zipping-artifacts
+      image: ibmcom/pipeline-base-image
+      command: ["/bin/sh", "-c"]
+      args:
+        - zip -r artifact /artifacts/ -x ".*";
+          echo "Done Zipping";
+    - name: saving-artifacts
+      image: ibmcom/pipeline-base-image
+      env:
+        - name: ARTIFACTORY_URL
+          value: $(params.artifactoryUrl)
+        - name: ARTIFACTORY_USER
+          value: $(params.artifactoryUserName)
+        - name: ARTIFACTORY_PASSWORD
+          value: $(params.artifactoryPassword)
+      command: ["/bin/sh", "-c"]
+      args:
+        - curl -u $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD -X PUT "$ARTIFACTORY_URL/artifact/data.zip" -T artifact.zip;
+  
